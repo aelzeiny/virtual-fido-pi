@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  virtual-fido:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    command: >
+      -c "cd /app && 
+          # Start the Virtual FIDO server in the background
+          (cd cmd/demo && ./demo start &) && 
+          # Wait for the server to start
+          sleep 3 && 
+          # Run unit tests for the Python shim
+          python3 usbip_to_gadget.py --unittest"
